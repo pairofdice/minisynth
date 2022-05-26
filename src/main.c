@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 		{
 			//p = *(char *)vec_get(line_vec, k++);
 			note = *(t_note *)vec_get(line_vec, k);
-			printf("%c", note.frequency);
+			//printf("%c", note.frequency);
 			k++;
 		}
 		ft_putchar('\n');

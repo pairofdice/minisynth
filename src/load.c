@@ -38,13 +38,32 @@ void	process_note(t_note *note, char ***notes, t_vec *linevec)
 //	alteration	# or b			-optional
 //	octave		0 to 9			-optional
 //	duration	/0.0			-optional
-	//note->octave = ft_atoi(*(*notes));
-	if (ft_isascii(**notes[0]))
+	//if no octave or octave value given, take value from prev note, on that line.
+	//if first note on that line and no value specifed, octave = 4 and duration = 1
+	static int 	prev_octave;
+	static int	prev_duration;
+	static int	newline_start;
+	float		n;
+	int			i;
+
+	n = 0;
+	if (ft_isalpha(**notes[0]))
 	{
-		note->frequency = **notes[0];
-		vec_push(linevec, note);
+		printf("%s\n ", **notes);
+		i = 0;
+		while (**notes[i])
+		{
+			if (**notes[0] == 'r')
+			{
+				note->frequency = 0;
+				if ()
+				vec_push(linevec, note);
+				return ;
+			}
+			else if (**notes[i] == '/')
+				note->duration = 
+		}
 	}
-	
 	
 }
 
@@ -69,7 +88,7 @@ int	load_file(int fd, t_context *ctx)
 		{
 			process_note(&note, &notes, &linevec);
 			notes++;
-			}
+		}
 		if (linevec.len > 2)
 		{
 			vec_push(&ctx->tracks, &linevec);
