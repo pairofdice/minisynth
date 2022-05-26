@@ -45,7 +45,7 @@ void	process_note(t_note *note, char ***notes, t_vec *linevec)
 		vec_push(linevec, note);
 	}
 	
-	(*notes)++;
+	
 }
 
 int	load_file(int fd, t_context *ctx)
@@ -66,7 +66,10 @@ int	load_file(int fd, t_context *ctx)
 		notes = ft_strsplit(line, ' ');
 		temp = notes;
 		while (*notes != 0)
+		{
 			process_note(&note, &notes, &linevec);
+			notes++;
+			}
 		if (linevec.len > 2)
 		{
 			vec_push(&ctx->tracks, &linevec);
