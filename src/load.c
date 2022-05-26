@@ -30,7 +30,52 @@ int	handle_args(int argc, char **argv, t_context *ctx)
 	free(*array);
 	*array = NULL;
 }
- 
+
+float	initialise_note(char note)
+{
+	float	res;
+	switch (note)
+	{
+		case 'a':
+			res = N_A;
+			break;
+		case 'b':	
+			res = N_B;	
+			break;
+		case 'c':
+			res = N_C;
+			break;
+		case 'd':	
+			res = N_D;	
+			break;
+		case 'e':
+			res = N_E;
+			break;
+		case 'f':	
+			res = N_F;	
+			break;
+		case 'g':
+			res = N_G;
+			break;
+		case 'r':	
+			res = 0;	
+			break;
+	}
+	return (res);
+}
+
+float	set_duration(char *s)
+{
+	float res;
+	char *point;
+
+	res = (float) ft_atoi(s);
+	point = ft_strchr(s, '.');
+	if (point)
+		res += (ft_atoi(point + 1) / pow(10, ft_strlen(point + 1)));
+	return (res);
+}
+
 void	process_note(t_note *note, char ***notes, t_vec *linevec)
 {
 // <pitch>[<alteration>][<octave>][/<duration>]
@@ -43,26 +88,36 @@ void	process_note(t_note *note, char ***notes, t_vec *linevec)
 	static int 	prev_octave;
 	static int	prev_duration;
 	static int	newline_start;
-	float		n;
+	char		*s;
+	float		n, d;
 	int			i;
 
 	n = 0;
-	if (ft_isalpha(**notes[0]))
+	d = 0;
+	s = **notes;
+	if (ft_isalpha(s[0]))
 	{
-		printf("%s\n ", **notes);
-		i = 0;
-		while (**notes[i])
+		n = initialise_note(s[0]);		
+		i = 1;
+		while (s[i])
 		{
-			if (**notes[0] == 'r')
-			{
-				note->frequency = 0;
-				if ()
-				vec_push(linevec, note);
-				return ;
+			if (ft_isdigit(s[i]))
+				n *= pow(2, ft_atoi(s + i));
+			else if (s[i] == 'b')
+				n *= N_FL;
+			else if (s[i] == '#')
+				n *= N_SH;
+			else if (s[i] == '/')
+			{	
+				d = set_duration(s + i + 1); 
+				break ;
 			}
-			else if (**notes[i] == '/')
-				note->duration = 
+			i++;
 		}
+		//printf("%s %f\n ", **notes, d);
+		note->frequency = n;
+		note->duration = d;
+		vec_push(linevec, note);
 	}
 	
 }
