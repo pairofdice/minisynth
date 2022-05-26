@@ -23,6 +23,8 @@
 # define N_SH 1.059463094359
 # define N_FL 0.943874312682
 
+int tempo;
+
 
 typedef struct s_context
 {
@@ -35,11 +37,12 @@ typedef struct s_note
 {
 	double	frequency;
 	double	duration;
+	char	note;
 }	t_note;
 
 
 int	handle_args(int argc, char **argv, t_context *ctx);
 int	load_file(int fd, t_context *ctx);
-int16_t sine_instrument(double frequency, int time);
+double sine_instrument(double frequency, float time);
 
 #endif

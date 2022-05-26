@@ -1,5 +1,7 @@
 #include "minisynth.h"
 
+
+
 int	handle_args(int argc, char **argv, t_context *ctx)
 {
 	int	fd;
@@ -45,25 +47,20 @@ void	process_note(t_note *note, char ***notes, t_vec *linevec)
 	static int	newline_start;
 	float		n;
 	int			i;
+	char *s;
+
+	s = **notes;
 
 	n = 0;
-	if (ft_isalpha(**notes[0]))
+	if (ft_isalpha(s[0]))
 	{
-		printf("%s\n ", **notes);
-		i = 0;
-		while (**notes[i])
-		{
-			if (**notes[0] == 'r')
-			{
-				note->frequency = 0;
-				if ()
+
+				note->note = *s;
+				//if ()
 				vec_push(linevec, note);
-				return ;
-			}
-			else if (**notes[i] == '/')
-				note->duration = 
-		}
-	}
+
+
+	} 
 	
 }
 
@@ -74,25 +71,40 @@ int	load_file(int fd, t_context *ctx)
 	char	**temp;
 	t_note	note;
 	t_vec	linevec;
+	int setup;
+
+	setup = 0;
 
 	vec_new(&ctx->tracks, BUFF_SIZE * 2, sizeof(t_vec));
 
 	while (get_next_line(fd, &line))
 	{
-		if (!ft_isdigit(*line))
-			continue;
+		if (setup < 2)
+		{
+			if (ft_strncmp("tempo", line, 5) == 0)
+			{
+				tempo = ft_atoi(&line[6]);
+				setup++;
+				continue ;
+			}
+			if (ft_strncmp("tracks", line, 6) == 0)
+			{
+				read_instruments();
+				setup++;
+				continue ;
+			}
+		}
 		vec_new(&linevec, ft_strlen(line) / 2 + 1, sizeof(t_note));
 		notes = ft_strsplit(line, ' ');
 		temp = notes;
+		//notes++;
 		while (*notes != 0)
 		{
 			process_note(&note, &notes, &linevec);
 			notes++;
 		}
-		if (linevec.len > 2)
-		{
+		if (linevec.len > 0)
 			vec_push(&ctx->tracks, &linevec);
-		}
 		free_array((void *)&temp);
 		ft_strdel(&line);
 	}

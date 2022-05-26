@@ -1,7 +1,11 @@
 # include "minisynth.h"
 
-int16_t sine_instrument(double frequency, int i)
+double sine_instrument(double frequency, float tc)
 {
-	return (sin(((float)i/ frequency) * 2.0 * M_PI));
-	
+	return (sin(tc * frequency * 2.0 * M_PI));
+}
+
+double square_instrument(double frequency, float tc)
+{
+	return (sin(tc * frequency * 2.0 * M_PI));
 }
