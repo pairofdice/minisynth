@@ -51,7 +51,7 @@ void	process_note(t_note *note, char ***notes, t_vec *linevec)
 int	load_file(int fd, t_context *ctx)
 {
 	char	*line;
-	char	**words;
+	char	**notes;
 	char	**temp;
 	t_note	note;
 	t_vec	linevec;
@@ -63,10 +63,10 @@ int	load_file(int fd, t_context *ctx)
 		if (!ft_isdigit(*line))
 			continue;
 		vec_new(&linevec, ft_strlen(line) / 2 + 1, sizeof(t_note));
-		words = ft_strsplit(line, ' ');
-		temp = words;
-			while (*words != 0)
-				process_note(&note, &words, &linevec);
+		notes = ft_strsplit(line, ' ');
+		temp = notes;
+		while (*notes != 0)
+			process_note(&note, &notes, &linevec);
 		if (linevec.len > 2)
 		{
 			vec_push(&ctx->tracks, &linevec);
