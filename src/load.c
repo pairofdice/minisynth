@@ -93,7 +93,7 @@ void	process_note(t_note *note, char ***notes, t_vec *linevec)
 	char		*s;
 	float		n, d;
 	int			i;
-	char *s;
+
 
 	s = **notes;
 
@@ -127,6 +127,11 @@ void	process_note(t_note *note, char ***notes, t_vec *linevec)
 	
 }
 
+void	read_instruments(t_context *ctx, char *line)
+{
+
+}
+
 int	load_file(int fd, t_context *ctx)
 {
 	char	*line;
@@ -152,7 +157,7 @@ int	load_file(int fd, t_context *ctx)
 			}
 			if (ft_strncmp("tracks", line, 6) == 0)
 			{
-				read_instruments();
+				read_instruments(ctx, line);
 				setup++;
 				continue ;
 			}
@@ -160,7 +165,7 @@ int	load_file(int fd, t_context *ctx)
 		vec_new(&linevec, ft_strlen(line) / 2 + 1, sizeof(t_note));
 		notes = ft_strsplit(line, ' ');
 		temp = notes;
-		//notes++;
+		notes++;
 		while (*notes != 0)
 		{
 			process_note(&note, &notes, &linevec);
