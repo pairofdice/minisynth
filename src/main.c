@@ -7,7 +7,7 @@ int close_synth()
 
 void  insert_into_buffer(SDL_AudioDeviceID *audio_device, t_context *ctx, int i)
 {
-    double sample;
+    //double sample;
     //uint local_time;
     t_vec track;
     track = *(t_vec *)vec_get(&ctx->tracks, i);
@@ -17,18 +17,19 @@ void  insert_into_buffer(SDL_AudioDeviceID *audio_device, t_context *ctx, int i)
     //printf("%d %zu\n", ctx->buffer_time, ctx->track_pos[i]);
     //printf("%f\n", note.duration);
     ctx->buffer_time = 0;
-    while (ctx->buffer_time < 44100 && ctx->track_pos[i] < track.len - 1 )
+    while (ctx->buffer_time < 44100 && ctx->track_pos[i] < track.len )
     {
       // printf("%g %g\n", note.frequency,  ctx->time , ctx->buffer_time));
       // printf("%g %g\n", note.frequency, sine_instrument(note.frequency, ctx->time + ctx->buffer_time));
         ctx->buffer[ctx->buffer_time] += sine_instrument(note.frequency, ctx->time + ctx->buffer_time);
         ctx->buffer_time++;
-        note.duration -= 1.0/ 44100;
+        note.duration -= (1.0 / 44100);
          if (note.duration <= 0)
         {
             ctx->track_pos[i]++;
             note = *(t_note *)vec_get(&track, ctx->track_pos[i]);
         } 
+    
     }
 
    
@@ -119,9 +120,7 @@ void    play_song(SDL_AudioDeviceID *audio_device, SDL_AudioSpec *audio_spec, t_
         bzero(ctx->buffer, 44100 * sizeof(int16_t));
         while (i < ctx->tracks.len)
         {
-           
             // printf("%zu %f %d %f\n",ctx->tracks.len, ctx->song_duration, audio_spec->freq, ctx->song_duration  * audio_spec->freq);
-            
             insert_into_buffer(audio_device, ctx, i);
             i++;
         }
@@ -170,10 +169,8 @@ int main(int argc, char **argv)
     audio_spec.samples = 1024;
     audio_spec.callback = NULL;
     audio_device = SDL_OpenAudioDevice(NULL, 0, &audio_spec, NULL, 0);
-    // pushing 3 seconds of samples to the audio buffer:
 
-    printf("%f", ctx.song_duration);
-    float tc;
+  /*   float tc;
     for (int i = 0; i < 22050; i++) {
 
         // SDL_QueueAudio expects a signed 16-bit value
@@ -183,7 +180,7 @@ int main(int argc, char **argv)
        int16_t sample = log(sine_instrument(440.0, tc) * 1000);
        //printf("%d %d %f %hd\n",i, audio_spec.freq, tc, sample);
             SDL_QueueAudio(audio_device, &sample, sizeof(int16_t));
-    }
+    } */
     play_song(&audio_device, &audio_spec, &ctx);
 
     // unpausing the audio device (starts playing):
@@ -193,7 +190,7 @@ int main(int argc, char **argv)
     SDL_Quit();
 
 
-/*       int n = 0;
+       int n = 0;
     t_vec track;
     t_note no;
     while (n < ctx.tracks.len)
@@ -209,5 +206,5 @@ int main(int argc, char **argv)
         }
         n++;
             printf("\n");
-    }  */ 
+    }  
 }
