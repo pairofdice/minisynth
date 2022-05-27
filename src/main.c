@@ -4,52 +4,62 @@ int close_synth()
 {
 	return (0);
 }
-
-double  insert_into_buffer(t_note *note, int16_t *buffer,  uint  time, uint  buffer_time, int freq)
+double  insert_into_buffer(t_note *note, int16_t **buffer,  uint  time, uint  buffer_time, int16_t freq, SDL_AudioDeviceID *audio_device)
 {
-    uint  buffer_time;
-    while (buffer_time < freq)
-    {
-        sine_instrument(note->frequency, time)
-    }
+    printf("Hi\n");
+    //double sample;
+    uint local_time;
+    local_time = buffer_time;
+
+    *buffer[local_time] += sine_instrument(note->frequency, time + local_time) * 5000;
+   
+    printf("%d %u, %gHo\n", *buffer[local_time], time + local_time, sine_instrument(note->frequency, time + local_time));
+    //*buffer[local_time] += sample;
+    //*buffer[local_time] = log(*buffer[local_time]);
+    //logdivide bym num_tracks;
     return note->duration - (freq - buffer_time) /(float)freq;
 }
 
 void    play_song(SDL_AudioDeviceID *audio_device, SDL_AudioSpec *audio_spec, t_context *ctx)
 {
     t_note note;
-    int16_t buffer[audio_spec->freq];
+    int16_t *buffer;
     size_t track_pos[ctx->tracks.len];
     t_vec track;
     uint  time;
     uint  buffer_time;
-    t_note  note;
 
+    buffer = malloc(44100 * sizeof(int16_t));
     int i =0;
     while (i  < ctx->tracks.len)
     {
         track_pos[i] = 0;
         i++;
     }
+    time = 0;
     while (time < (ctx->song_duration  * audio_spec->freq))
     {
         i = 0;
+        printf("%d\n",time);
         while (i < ctx->tracks.len)
         {
+            // printf("%zu %f %d %f\n",ctx->tracks.len, ctx->song_duration, audio_spec->freq, ctx->song_duration  * audio_spec->freq);
             buffer_time = time % audio_spec->freq;
+            printf("buffer_time: %d\n",buffer_time);
             track = *(t_vec *)vec_get(&ctx->tracks, i);
             note = *(t_note *)vec_get(&track, track_pos[i]);
 
-            note.duration = insert_into_buffer(&note, &buffer, buffer_time, audio_spec->freq);
+            note.duration = insert_into_buffer(&note, &buffer, time, buffer_time, audio_spec->freq, audio_device);
+            printf("in buffer: %hd\n", buffer[buffer_time]);
             if (note.duration <= 0)
                 track_pos[i]++;
             i++;
         }
-
+        SDL_QueueAudio(*audio_device, &buffer[buffer_time], sizeof(int16_t));
+        
         time++;
     }    
-    note.duration = 0.5;
-    note.frequency = 440.0;
+
 	float tc;
     for (int i = 0; i < audio_spec->freq * note.duration; i++) {
 
@@ -59,7 +69,7 @@ void    play_song(SDL_AudioDeviceID *audio_device, SDL_AudioSpec *audio_spec, t_
        tc = (float)i / (float)audio_spec->freq;
        int16_t sample = sine_instrument(note.frequency, tc) * 5000;
        //printf("%d %d %f %hd\n",i, audio_spec.freq, tc, sample);
-        SDL_QueueAudio(audio_device, &sample, sizeof(int16_t));
+        
     }
 }
 
@@ -89,12 +99,12 @@ int main(int argc, char **argv)
 
     // unpausing the audio device (starts playing):
     SDL_PauseAudioDevice(audio_device, 0);
-    SDL_Delay(ctx.song_duration);
+    SDL_Delay(500);
     SDL_CloseAudioDevice(audio_device);
     SDL_Quit();
 
 
-/*     int n = 0;
+/*      int n = 0;
     t_vec track;
     t_note no;
     while (n < ctx.tracks.len)
@@ -110,5 +120,5 @@ int main(int argc, char **argv)
         }
         n++;
             printf("\n");
-    } */
+    }  */
 }

@@ -58,6 +58,7 @@ void	get_song_duration(t_context *ctx)
 		result += note.duration;
 		i++;
 	}
+	ctx->song_duration = result;
 		//printf("song duration: %f\n", result);
 
 }
@@ -167,7 +168,7 @@ void	process_note(t_note *note, char ***notes, t_vec *linevec, int not_nl)
 			n *= pow(2, 4);
 			prev_octave = 4;
 		}
-		printf("%s %g %g\n ", **notes, n, d);
+		//printf("%s %g %g\n ", **notes, n, d);
 		note->frequency = n;
 		note->duration = d;
 		vec_push(linevec, note);
@@ -230,9 +231,9 @@ int	load_file(int fd, t_context *ctx)
 				{
 					if (is_note(*notes))
 					{
-						if (appending)
+						 if (appending)
 							process_note(&note, &notes, test, not_newline);
-						else
+						else 
 							process_note(&note, &notes, &linevec, not_newline);
 						if (!not_newline)
 							not_newline = TRUE;
