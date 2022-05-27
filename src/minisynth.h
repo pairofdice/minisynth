@@ -27,11 +27,10 @@
 
 int tempo;
 
-
 typedef struct s_context
 {
 	int			tempo;
-	int			*instruments;
+	char		**instruments;
 	t_vec		tracks;
 }	t_context;
 

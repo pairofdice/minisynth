@@ -155,11 +155,6 @@ void	process_note(t_note *note, char ***notes, t_vec *linevec, int not_nl)
 	}
 }
 
-void	read_instruments(t_context *ctx, char *line)
-{
-
-}
-
 int	load_file(int fd, t_context *ctx)
 {
 	char	*line;
@@ -185,7 +180,7 @@ int	load_file(int fd, t_context *ctx)
 			}
 			if (ft_strncmp("tracks", line, 6) == 0)
 			{
-				read_instruments(ctx, line);
+				ctx->instruments = ft_strsplit(line + 7, ',');
 				setup++;
 				continue ;
 			}
