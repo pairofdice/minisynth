@@ -42,6 +42,26 @@ int	handle_args(int argc, char **argv, t_context *ctx)
 	*array = NULL;
 }
 
+void	get_song_duration(t_context *ctx)
+{
+	//printf("HELLOOOOOOOOO\n");
+	int i = 0;
+	double result = 0;
+	t_vec track;
+	t_note note;
+
+	track = *(t_vec *)vec_get(&ctx->tracks, 0);
+	while (i < track.len)
+	{
+		note = *(t_note *)vec_get(&track, i);
+		//printf("%f \n", note.duration);
+		result += note.duration;
+		i++;
+	}
+		//printf("song duration: %f\n", result);
+
+}
+
 float	initialise_note(char note)
 {
 	float	res;
@@ -165,6 +185,7 @@ int	load_file(int fd, t_context *ctx)
 	t_vec	*test;
 	int setup, not_newline;
 	int track_n;
+	int appending;
 
 	setup = 0;
 
@@ -193,24 +214,25 @@ int	load_file(int fd, t_context *ctx)
 			test = NULL;
 			track_n = ft_atoi(line);
 			//printf("%d %zu \n", track_n, ctx->tracks.len);
-			if (track_n <= ctx->tracks.len)
-			{
-				linevec = *(t_vec *)vec_get(&ctx->tracks, track_n - 1);
-			} else
-				vec_new(&linevec, ft_strlen(line) / 2 + 1, sizeof(t_note));
 			notes = ft_strsplit(line, ' ');
 			temp = notes;
 			//printf("%s\n", *notes);
 			if (*notes)
 			{	
+				appending = track_n <= ctx->tracks.len;
+				if (appending)
+					test = (t_vec *)vec_get(&ctx->tracks, track_n - 1);
+				else
+					vec_new(&linevec, ft_strlen(line) / 2 + 1, sizeof(t_note));
 				notes++;
 				not_newline = FALSE;
 				while (*notes != 0)
 				{
 					if (is_note(*notes))
-					{	/* if (test)
+					{
+						if (appending)
 							process_note(&note, &notes, test, not_newline);
-						else */
+						else
 							process_note(&note, &notes, &linevec, not_newline);
 						if (!not_newline)
 							not_newline = TRUE;
@@ -226,16 +248,15 @@ int	load_file(int fd, t_context *ctx)
 					printf("---\n");  */
 				if (linevec.len > 0)
 				{
-					if (track_n > ctx->tracks.len)
-					{
+					if (!appending)
 						vec_push(&ctx->tracks, &linevec);
-					}
 				}
-				//free_array((void *)&temp);
-				//ft_strdel(&line);
+				free_array((void *)&temp);
+				ft_strdel(&line);
 			}
 		}
 
 	}
+	get_song_duration(ctx);
 	return (1);
 }

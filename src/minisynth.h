@@ -29,7 +29,10 @@ int tempo;
 
 typedef struct s_context
 {
+	double		song_duration;
 	int			tempo;
+	uint		time;
+	uint		buffer_time;
 	char		**instruments;
 	t_vec		tracks;
 }	t_context;
