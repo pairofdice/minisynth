@@ -48,5 +48,7 @@ typedef struct s_note
 int	handle_args(int argc, char **argv, t_context *ctx);
 int	load_file(int fd, t_context *ctx);
 double sine_instrument(double frequency, float time);
-
+double square_instrument(double frequency, float tc);
+double triangle_instrument(double frequency, float tc);
+double saw_instrument(double frequency, float tc);
 #endif
