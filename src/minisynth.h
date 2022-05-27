@@ -31,10 +31,13 @@ typedef struct s_context
 {
 	double		song_duration;
 	int			tempo;
-	uint		time;
 	uint		buffer_time;
 	char		**instruments;
 	t_vec		tracks;
+	double		*buffer;
+    size_t		*track_pos;
+    t_vec		track;
+    uint		time;
 }	t_context;
 
 typedef struct s_note
@@ -51,4 +54,6 @@ double sine_instrument(double frequency, float time);
 double square_instrument(double frequency, float tc);
 double triangle_instrument(double frequency, float tc);
 double saw_instrument(double frequency, float tc);
+double kick_instrument(double frequency, float tc);
+double snare_instrument(double frequency, float tc);
 #endif

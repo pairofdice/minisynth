@@ -2,12 +2,12 @@
 
 double sine_instrument(double frequency, float tc)
 {
-	return (sin(tc * frequency * 2.0 * M_PI));
+	return (sin(tc /44100.0 * frequency * 2.0 * M_PI));
 }
 
 double square_instrument(double frequency, float tc)
 {
-	if (sin(tc * frequency * 2.0 * M_PI) > 0)
+	if (sin(tc/44100.0 * frequency * 2.0 * M_PI) > 0)
 		return (1);
 	else
 		return (-1);
@@ -48,6 +48,18 @@ double saw_instrument(double frequency, float tc)
 	}
 	return (res);
 }
+
+double kick_instrument(double frequency, float tc)
+{
+	return (sin(tc /44100.0 * frequency * 2.0 * M_PI));
+}
+
+double snare_instrument(double frequency, float tc)
+{
+	return (sin(tc /44100.0 * frequency * 2.0 * M_PI));
+}
+
+//double	(*fn_ptrs[ctx.tracks.len])(double frequency, float tc);
 
 
 //sin_x + ((pow(3, -2)) * (0 - (sin_x * 3))) + ((pow(5, -2)) * (sin_x * 5)) + ((pow(7, -2)) * (sin_x * 7)) + ((pow(9, -2)) * (sin_x * 9)) + ((pow(11, -2)) * (sin_x * 11));
