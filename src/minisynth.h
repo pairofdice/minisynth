@@ -22,6 +22,8 @@
 # define N_B 30.87
 # define N_SH 1.059463094359
 # define N_FL 0.943874312682
+# define TRUE 1
+# define FALSE 0
 
 int tempo;
 

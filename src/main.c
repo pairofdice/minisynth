@@ -14,7 +14,6 @@ int main(int argc, char **argv)
 	t_note note;
 
 	handle_args(argc, argv, &ctx);
-
 	SDL_Init(SDL_INIT_AUDIO);
     // the representation of our audio device in SDL:
     SDL_AudioDeviceID audio_device;
@@ -31,7 +30,7 @@ int main(int argc, char **argv)
     // pushing 3 seconds of samples to the audio buffer:
     note.duration = 0.5;
     note.frequency = 440.0;
-    float tc;
+	float tc;
     for (int i = 0; i < audio_spec.freq * note.duration; i++) {
 
         // SDL_QueueAudio expects a signed 16-bit value
