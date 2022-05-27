@@ -23,7 +23,7 @@ int	handle_args(int argc, char **argv, t_context *ctx)
 	}
 	else
 	{
-		ft_putstr("Usage: ./fdf <map>\n");
+		ft_putstr("Usage: ./minisynth <.synth file>\n");
 		exit(1);
 	}
 	load_file(fd, ctx);
@@ -120,7 +120,7 @@ void	process_note(t_note *note, char ***notes, t_vec *linevec, int not_nl)
 	static int 		prev_octave;
 	static float	prev_duration;
 	char			*s;
-	float			n, d;
+	double			n, d;
 	int				i, oct_parsed, dur_parsed;
 
 
@@ -171,6 +171,7 @@ void	process_note(t_note *note, char ***notes, t_vec *linevec, int not_nl)
 		//printf("%s %g %g\n ", **notes, n, d);
 		note->frequency = n;
 		note->duration = d;
+		note->duration *= 60.0/tempo;
 		vec_push(linevec, note);
 		//prev_octave = prev_duration = 0;
 	}
@@ -222,7 +223,7 @@ int	load_file(int fd, t_context *ctx)
 			{	
 				appending = track_n <= ctx->tracks.len;
 				if (appending)
-					test = (t_vec *)vec_get(&ctx->tracks, track_n - 1);
+					linevec = *(t_vec *)vec_get(&ctx->tracks, track_n - 1);
 				else
 					vec_new(&linevec, ft_strlen(line) / 2 + 1, sizeof(t_note));
 				notes++;
@@ -231,9 +232,9 @@ int	load_file(int fd, t_context *ctx)
 				{
 					if (is_note(*notes))
 					{
-						 if (appending)
+						 /* if (appending)
 							process_note(&note, &notes, test, not_newline);
-						else 
+						else  */
 							process_note(&note, &notes, &linevec, not_newline);
 						if (!not_newline)
 							not_newline = TRUE;

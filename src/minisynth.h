@@ -36,6 +36,7 @@ typedef struct s_context
 	t_vec		tracks;
 	double		*buffer;
     size_t		*track_pos;
+	int			*track_instru;
     t_vec		track;
     uint		time;
 }	t_context;

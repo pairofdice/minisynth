@@ -30,7 +30,7 @@ RM = /bin/rm -f
 all: $(NAME)
 
 $(NAME): $(SRC) $(OBJ) $(LIBA)
-	$(CC) -o $@   $(SRC) $(LIBA) $(FRAMEWORKS) -flto -O3 -fsanitize=address -g
+	$(CC) -o $@   $(SRC) $(LIBA) $(FRAMEWORKS)
 
 mb: $(SRC) $(OBJ) $(LIBA)
 	$(CC) -o $@  $(SRC) $(LIBA) -flto -O3
