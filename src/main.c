@@ -47,21 +47,22 @@ int main(int argc, char **argv)
     SDL_CloseAudioDevice(audio_device);
     SDL_Quit();
 
-    i = 0;
-    printf("Hello %zu\n", ctx.tracks.len);
-    printf("%d\n", tempo);
-	while (i < ctx.tracks.len)
-	{
-		line_vec = (t_vec *)vec_get(&ctx.tracks, i);
-		size_t k = 0;
-		while (k < line_vec->len)
-		{
-			//p = *(char *)vec_get(line_vec, k++);
-			note = *(t_note *)vec_get(line_vec, k);
-			printf("%c ", note.note);
-			k++;
-		}
-		ft_putchar('\n');
-		i++;
-	}
+
+    int n = 0;
+    t_vec track;
+    t_note no;
+    while (n < ctx.tracks.len)
+    {
+        track = *(t_vec *)vec_get(&ctx.tracks, n);
+        int k = 0;
+        while (k < track.len)
+        {
+            no = *(t_note *)vec_get(&track, k);
+            printf("%g %g\n", no.frequency, no.duration);
+
+            k++;
+        }
+        n++;
+            printf("\n");
+    }
 }

@@ -147,7 +147,7 @@ void	process_note(t_note *note, char ***notes, t_vec *linevec, int not_nl)
 			n *= pow(2, 4);
 			prev_octave = 4;
 		}
-		//printf("%s %g %g\n ", **notes, n, d);
+		printf("%s %g %g\n ", **notes, n, d);
 		note->frequency = n;
 		note->duration = d;
 		vec_push(linevec, note);
@@ -167,7 +167,9 @@ int	load_file(int fd, t_context *ctx)
 	char	**temp;
 	t_note	note;
 	t_vec	linevec;
+	t_vec	*test;
 	int setup, not_newline;
+	int track_n;
 
 	setup = 0;
 
@@ -190,29 +192,55 @@ int	load_file(int fd, t_context *ctx)
 				continue ;
 			}
 		}
-		vec_new(&linevec, ft_strlen(line) / 2 + 1, sizeof(t_note));
-		notes = ft_strsplit(line, ' ');
-		temp = notes;
-		//printf("%s\n", *notes);
-		if (*notes)
-		{	
-			notes++;
-			not_newline = FALSE;
-			while (*notes != 0)
+	
+		if (ft_isdigit(*line))
+		{
+			test = NULL;
+			track_n = ft_atoi(line);
+			//printf("%d %zu \n", track_n, ctx->tracks.len);
+			if (track_n <= ctx->tracks.len)
 			{
-				if (is_note(*notes))
-				{	
-					process_note(&note, &notes, &linevec, not_newline);
-					if (!not_newline)
-						not_newline = TRUE;
-				}
+				linevec = *(t_vec *)vec_get(&ctx->tracks, track_n - 1);
+			} else
+				vec_new(&linevec, ft_strlen(line) / 2 + 1, sizeof(t_note));
+			notes = ft_strsplit(line, ' ');
+			temp = notes;
+			//printf("%s\n", *notes);
+			if (*notes)
+			{	
 				notes++;
+				not_newline = FALSE;
+				while (*notes != 0)
+				{
+					if (is_note(*notes))
+					{	/* if (test)
+							process_note(&note, &notes, test, not_newline);
+						else */
+							process_note(&note, &notes, &linevec, not_newline);
+						if (!not_newline)
+							not_newline = TRUE;
+					}
+					notes++;
+				}
+	/* 			 int i = 0;
+				while (i < linevec.len)
+				{	
+					printf("%c %g \n", *line, *(double *)vec_get(&linevec, i));
+					i++;
+				}
+					printf("---\n");  */
+				if (linevec.len > 0)
+				{
+					if (track_n > ctx->tracks.len)
+					{
+						vec_push(&ctx->tracks, &linevec);
+					}
+				}
+				//free_array((void *)&temp);
+				//ft_strdel(&line);
 			}
-			if (linevec.len > 0)
-			vec_push(&ctx->tracks, &linevec);
-			free_array((void *)&temp);
-			ft_strdel(&line);
 		}
+
 	}
 	return (1);
 }
