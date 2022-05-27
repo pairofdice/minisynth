@@ -19,14 +19,14 @@ void  insert_into_buffer(SDL_AudioDeviceID *audio_device, t_context *ctx, int tr
     fn_ptrs[3] = saw_instrument;
     fn_ptrs[4] = kick_instrument;
     fn_ptrs[5] = snare_instrument;
-
     ctx->buffer_time = 0;
     while (ctx->buffer_time < 44100 && ctx->track_pos[track_n] < track.len )
     {
-        ctx->buffer[ctx->buffer_time] += fn_ptrs[track_n](note.frequency, ctx->time + ctx->buffer_time);
+        printf("%f\n", note.duration);
+        ctx->buffer[ctx->buffer_time] += sine_instrument(note.frequency, ctx->time + ctx->buffer_time);
         ctx->buffer_time++;
         note.duration -= (1.0  / 44100 );
-         if (note.duration <= 0)
+        if (note.duration <= 0)
         {
             ctx->track_pos[track_n]++;
             note = *(t_note *)vec_get(&track, ctx->track_pos[track_n]);
@@ -60,7 +60,7 @@ void    play_song(SDL_AudioDeviceID *audio_device, SDL_AudioSpec *audio_spec, t_
     int i;
     ctx->buffer = malloc(44100 * sizeof(double));
     ctx->track_pos = malloc(ctx->tracks.len * (sizeof(size_t) + 1));
-    ctx->track_instru = malloc(ctx->tracks.len * (sizeof(int) ));
+    ctx->track_instru = malloc(ctx->tracks.len * (sizeof(int) + 1));
     init_instruments(ctx);
      
     bzero(ctx->track_pos, ctx->tracks.len * (sizeof(size_t) + 1));
