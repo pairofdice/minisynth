@@ -6,7 +6,7 @@
 #    By: jsaarine <jsaarine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/01 12:23:08 by jsaarine          #+#    #+#              #
-#    Updated: 2022/05/28 02:28:41 by jsaarine         ###   ########.fr        #
+#    Updated: 2022/05/28 02:59:31 by jsaarine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,7 @@ HDRS = libft.h
 all: $(NAME)
 
 $(NAME):
-	gcc $(FLAGS) $(SRCS) -c -I$(HDRS) -O3 -flto -fsanitize=address
+	gcc $(FLAGS) $(SRCS) -c -I$(HDRS) -O3 -flto 
 	ar rc $(NAME) $(OBJS)
 
 clean:
